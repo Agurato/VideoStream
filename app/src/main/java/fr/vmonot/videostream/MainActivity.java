@@ -1,19 +1,19 @@
 package fr.vmonot.videostream;
 
-import android.content.res.Configuration;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.net.Uri;
 import android.util.Log;
 import android.widget.MediaController;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 public class MainActivity extends AppCompatActivity {
-	VideoView vidView;
-	MediaController vidControl;
-	int pos = 0;
+	private VideoView vidView;
+	private MediaController vidControl;
+	private MediaPlayer mediaPlayer;
+	private int pos = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 		vidView.setMediaController(vidControl);
 		
 		// Prepare the URI for the endpoint.
-		String vidAddress = "android.resource://" + getPackageName() + "/" + R.raw	.video;
+		String vidAddress = "android.resource://" + getPackageName() + "/" + R.raw.video;
 		Uri vidUri = Uri.parse(vidAddress);
 		// Parse the address string as a URI so that we can pass it to the VideoView object.
 		vidView.setVideoURI(vidUri);
@@ -42,12 +42,15 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	public void onPause() {
 		super.onPause();
+		vidView.pause();
 		pos = vidView.getCurrentPosition();
+		Log.d("MainActivity", "Pause at "+pos+"/"+vidView.getDuration());
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
 		vidView.seekTo(pos);
+		Log.d("MainActivity", "Restart at "+pos);
 	}
 }
