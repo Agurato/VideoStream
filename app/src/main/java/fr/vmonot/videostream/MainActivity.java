@@ -13,6 +13,7 @@ import android.widget.VideoView;
 public class MainActivity extends AppCompatActivity {
 	VideoView vidView;
 	MediaController vidControl;
+	int pos = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,5 +37,17 @@ public class MainActivity extends AppCompatActivity {
 		vidView.setVideoURI(vidUri);
 		// Start playback.
 		vidView.start();
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		pos = vidView.getCurrentPosition();
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		vidView.seekTo(pos);
 	}
 }
