@@ -1,13 +1,18 @@
 package fr.vmonot.videostream;
 
+import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.net.Uri;
+import android.util.Log;
 import android.widget.MediaController;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 public class MainActivity extends AppCompatActivity {
+	VideoView vidView;
+	MediaController vidControl;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -15,10 +20,10 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		
 		// Get a reference to the VideoView instance as follows, using the id we set in the XML layout.
-		VideoView vidView = (VideoView)findViewById(R.id.video);
+		vidView = (VideoView)findViewById(R.id.video);
 		
 		// Add playback controls.
-		MediaController vidControl = new MediaController(this);
+		vidControl = new MediaController(this);
 		// Set it to use the VideoView instance as its anchor.
 		vidControl.setAnchorView(vidView);
 		// Set it as the media controller for the VideoView object.
