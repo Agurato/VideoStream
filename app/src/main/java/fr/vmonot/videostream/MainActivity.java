@@ -1,11 +1,14 @@
 package fr.vmonot.videostream;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.net.Uri;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -52,5 +55,33 @@ public class MainActivity extends AppCompatActivity {
 		super.onResume();
 		vidView.seekTo(pos);
 		Log.d("MainActivity", "Restart at "+pos);
+	}
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			// When the user clicks FETCH, fetch the first 500 characters of
+			// raw HTML from www.google.com.
+			case R.id.fetch_action:
+
+				return true;
+			// Clear the text and cancel download.
+				case R.id.action_settings:
+				startSettings();
+				return true;
+		}
+		return false;
+	}
+
+	private void startSettings()
+	{
+		startActivity(new Intent(this,VideoStreamSettingsActivity.class));
 	}
 }
