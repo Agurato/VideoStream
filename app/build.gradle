@@ -18,6 +18,10 @@ android {
         }
     }
 }
+repositories {
+    mavenCentral()
+    maven { url 'http://guardian.github.com/maven/repo-releases' }
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -28,6 +32,8 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:support-v4:26.+'
     compile 'com.android.support:design:26.+'
-    compile 'net.rdrei.android.dirchooser:library:3.2@aar'
+    compile ('net.rdrei.android.dirchooser:library:3.0@aar') {
+        transitive = true;
+    }
     testCompile 'junit:junit:4.12'
 }

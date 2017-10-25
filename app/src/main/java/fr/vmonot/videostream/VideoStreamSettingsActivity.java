@@ -20,7 +20,7 @@ import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
 public class VideoStreamSettingsActivity extends AppCompatActivity {
 	private static final String TAG = "VideoStreamSettingsAct";
-	static final int SELECT_DIR_REQUEST_CODE = 1;
+	static final int SELECT_DIR_REQUEST_CODE = 0;
 	
 	Switch enableServerSwitch;
 	Button chooseDirButton;
@@ -54,14 +54,14 @@ public class VideoStreamSettingsActivity extends AppCompatActivity {
 	
 		final String defaultDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
 		// We get the saved serverDirTextView, or a default one
-		if(! settings.contains("serverDirTextView")) {
+		if(! settings.contains("serverDir")) {
 			serverDirTextView.setText(defaultDir);
 			SharedPreferences.Editor editor = settings.edit();
-			editor.putString("serverDirTextView", defaultDir);
+			editor.putString("serverDir", defaultDir);
 			editor.apply();
 		}
 		else {
-			serverDirTextView.setText(settings.getString("serverDirTextView", defaultDir));
+			serverDirTextView.setText(settings.getString("serverDir", defaultDir));
 		}
 	
 		chooseDirButton.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +75,7 @@ public class VideoStreamSettingsActivity extends AppCompatActivity {
 				final Intent chooserIntent = new Intent(VideoStreamSettingsActivity.this, DirectoryChooserActivity.class);
 				
 				final DirectoryChooserConfig config = DirectoryChooserConfig.builder()
-						.newDirectoryName("DirChooserSample")
+						.newDirectoryName("nouveau dossier")
 						.allowReadOnlyDirectory(true)
 						.allowNewDirectoryNameModification(true)
 						.build();
@@ -100,7 +100,8 @@ public class VideoStreamSettingsActivity extends AppCompatActivity {
 					// Changes the server directory
 					SharedPreferences settings = getSharedPreferences("Settings", Context.MODE_PRIVATE);
 					SharedPreferences.Editor editor = settings.edit();
-					editor.putString("serverDirTextView", selectedDir);
+					editor.putString("serverDir", selectedDir);
+					serverDirTextView.setText(selectedDir);
 					editor.apply();
 				}
 				break;
