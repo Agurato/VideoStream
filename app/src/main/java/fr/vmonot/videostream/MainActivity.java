@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 		vidView.setMediaController(vidControl);
 		
 		// Prepare the URI for the endpoint.
-		String vidAddress = "android.resource://" + getPackageName() + "/" + R.raw.video;
+		String vidAddress = "android.resource://" + getPackageName() + "/" + R.raw.videomieux;
 		Uri vidUri = Uri.parse(vidAddress);
 		// Parse the address string as a URI so that we can pass it to the VideoView object.
 		vidView.setVideoURI(vidUri);
