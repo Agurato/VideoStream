@@ -19,34 +19,30 @@
         tools:replace="android:theme"
         android:theme="@style/AppTheme">
 
-        <activity
-            android:name=".VideoPlayerActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"></activity>
 
-        <activity android:name=".VideoStreamSettingsActivity" />
-        <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="fr.vmonot.videostream.MainActivity"/>
+            android:name=".VideoPlayerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
+
         </activity>
-        <activity android:name=".VideoStreamSettingsActivity"/>
-        <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity"/>
+
+        <activity android:name=".VideoStreamSettingsActivity" />
+
+        <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
+
+
+
+
         <activity android:name=".WifiDirectActivity"
                   android:configChanges="orientation|keyboardHidden|screenSize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
     </application>
 

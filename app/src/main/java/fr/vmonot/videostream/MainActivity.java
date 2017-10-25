@@ -70,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 startSettings();
                 return true;
+            case R.id.action_wifidirect:
+                startWifiDirect();
+                return true;
         }
         return false;
     }
@@ -77,6 +80,11 @@ public class MainActivity extends AppCompatActivity {
     private void startSettings()
     {
         startActivity(new Intent(this,VideoStreamSettingsActivity.class));
+    }
+
+    private void startWifiDirect(){
+        startActivity(new Intent(this,WifiDirectActivity.class));
+
     }
 
     private void refreshFileView(){
