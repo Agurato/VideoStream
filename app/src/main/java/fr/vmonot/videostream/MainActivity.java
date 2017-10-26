@@ -62,6 +62,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(myintent);
             }
         });
+		filelist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+				String filename = folderPath + File.separator+ adapter.getItem(position);
+				
+				return true;
+			}
+		});
 		
 		pDialog = new ProgressDialog(this);
 		pDialog.setMessage("Downloading... Please wait...");
@@ -142,6 +150,10 @@ public class MainActivity extends AppCompatActivity {
 			int count;
 			try {
 				filepath += File.separator + f_url[0].substring(f_url[0].lastIndexOf('/') + 1);
+				File downloadFile = new File(filepath);
+				if(downloadFile.exists()) {
+					downloadFile.delete();
+				}
 				Log.d(MainActivity.TAG, filepath);
 				
 				URL url = new URL(f_url[0]);
@@ -198,6 +210,8 @@ public class MainActivity extends AppCompatActivity {
 			
 			MainActivity.this.refreshFileView();
 			pDialog.dismiss();
+			pDialog.setMax(0);
+			pDialog.setProgress(0);
 		}
 		
 	}
