@@ -15,14 +15,13 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/fetch_action"
-        android:title="@string/fetch_text"/>
 
-    <item
-        android:id="@+id/action_settings"
+    <item android:id="@+id/fetch_action"
+        android:title="@string/fetch_video"/>
+
+    <item android:id="@+id/action_settings"
         android:title="Settings"/>
 
-    <item
-        android:id="@+id/action_wifidirect"
+    <item android:id="@+id/action_wifidirect"
         android:title="WiFi Direct"/>
 </menu>

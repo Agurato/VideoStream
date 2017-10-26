@@ -1,29 +1,48 @@
 package fr.vmonot.videostream;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import java.io.BufferedInputStream;
 import java.io.File;
-import java.util.ArrayList;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class MainActivity extends AppCompatActivity {
+	
+	public static final String TAG = "MainActivity";
 
     String folderPath;
     ListView filelist;
     ArrayAdapter<String>adapter;
-     SharedPreferences settings;
-
-    @Override
+    SharedPreferences settings;
+	
+	// Boolean telling us whether a download is in progress, so we don't trigger overlapping
+	// downloads with consecutive button clicks.
+	private boolean mDownloading = false;
+	
+	private ProgressDialog pDialog;
+		
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -43,8 +62,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(myintent);
             }
         });
-        refreshFileView();
-
+		
+		pDialog = new ProgressDialog(this);
+		pDialog.setMessage("Downloading... Please wait...");
+		pDialog.setIndeterminate(false);
+		pDialog.setCancelable(true);
+		pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -55,46 +78,127 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
-        folderPath =  settings.getString("serverDir", Environment.getExternalStorageState());
+        folderPath =  settings.getString("serverDir", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
         refreshFileView();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // When the user clicks FETCH, fetch the first 500 characters of
-            // raw HTML from www.google.com.
+			
             case R.id.fetch_action:
-
+				startDownloadVideo();
                 return true;
-            // Clear the text and cancel download.
+			
             case R.id.action_settings:
                 startSettings();
                 return true;
+			
             case R.id.action_wifidirect:
                 startWifiDirect();
                 return true;
         }
         return false;
     }
+    
+    private void startDownloadVideo() {
+		new DownloadFileFromURL().execute("https://ia800201.us.archive.org/22/items/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4");
+	}
 
-    private void startSettings()
-    {
-        startActivity(new Intent(this,VideoStreamSettingsActivity.class));
+    private void startSettings() {
+        startActivity(new Intent(this, VideoStreamSettingsActivity.class));
     }
 
-    private void startWifiDirect(){
-        startActivity(new Intent(this,WifiDirectActivity.class));
-
+    private void startWifiDirect() {
+        startActivity(new Intent(this, WifiDirectActivity.class));
     }
 
-    private void refreshFileView(){
+    private void refreshFileView() {
         adapter.clear();
         File folder=new File(folderPath);
         for (final File fileEntry : folder.listFiles()) {
             if (! fileEntry.isDirectory())
                 adapter.add(fileEntry.getName());
-            }
-        }
-
-
+		}
+	}
+	
+	private class DownloadFileFromURL extends AsyncTask<String, Integer, String> {
+		String filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+		
+		/**
+		 * Before starting background thread
+		 * */
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			Log.d(TAG, "Start downloading");
+			pDialog.show();
+		}
+		
+		/**
+		 * Downloading file in background thread
+		 * */
+		@Override
+		protected String doInBackground(String... f_url) {
+			int count;
+			try {
+				filepath += File.separator + f_url[0].substring(f_url[0].lastIndexOf('/') + 1);
+				Log.d(MainActivity.TAG, filepath);
+				
+				URL url = new URL(f_url[0]);
+				
+				URLConnection conection = url.openConnection();
+				conection.connect();
+				// getting file length
+				int fileLength = conection.getContentLength();
+				pDialog.setMax(fileLength/1024);
+				pDialog.setProgress(0);
+				
+				// input stream to read file - with 8k buffer
+				InputStream input = new BufferedInputStream(url.openStream(), 8192);
+				
+				// Output stream to write file
+				OutputStream output = new FileOutputStream(filepath);
+				byte data[] = new byte[1024];
+				
+				int total = 0;
+				while ((count = input.read(data)) != -1) {
+					total += count;
+					publishProgress(total/1024);
+					
+					// writing data to file
+					output.write(data, 0, count);
+				}
+				
+				// flushing output
+				output.flush();
+				
+				// closing streams
+				output.close();
+				input.close();
+				
+			} catch (Exception e) {
+				Log.e("Error: ", e.getMessage());
+			}
+			
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... progress) {
+			pDialog.setProgress(progress[0]);
+		}
+		
+		/**
+		 * After completing background task
+		 * **/
+		@Override
+		protected void onPostExecute(String file_url) {
+			System.out.println("Downloaded");
+			Toast.makeText(MainActivity.this, "Downloaded to "+filepath, Toast.LENGTH_SHORT).show();
+			
+			MainActivity.this.refreshFileView();
+			pDialog.dismiss();
+		}
+		
+	}
 }

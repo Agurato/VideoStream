@@ -6,7 +6,7 @@
 
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
-    <string name="fetch_text">Download URL</string>
+    <string name="fetch_video">Download Video</string>
 
     <string name="enable_server_text">Enable Server</string>
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
@@ -81,4 +81,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
