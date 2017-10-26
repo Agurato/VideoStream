@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,7 +24,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -103,9 +100,14 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 startSettings();
                 return true;
+			
             case R.id.action_wifidirect:
                 startWifiDirect();
                 return true;
+			
+			case R.id.action_bt:
+				startActivity(new Intent(this, BluetoothActivity.class));
+				return true;
         }
         return false;
     }
