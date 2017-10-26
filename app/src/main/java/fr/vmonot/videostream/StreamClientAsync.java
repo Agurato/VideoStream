@@ -5,6 +5,7 @@ import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -32,26 +33,30 @@ public class StreamClientAsync  extends AsyncTask<String , Integer , Boolean>   
     private WifiDirectActivity app;
     private String destPath;
     private int timeout;
-    private WifiP2pInfo cfg;
     byte[] BUFF = new byte[512];
     public StreamClientAsync(WifiDirectActivity app, String destPath ,String host, int port , int timeout){
         this.socket  = new Socket();
         this.host = host;
         this.port = port;
         this.timeout = timeout;
+		this.destPath = destPath;
+		this.app = app;
     }
 
     @Override
     protected Boolean doInBackground(String... params) {
 
         try {
-
+			Log.d("WifiDirectActivity", host+":"+port);
             socket.bind(null);
             socket.connect((new InetSocketAddress(host, port)), timeout);
+			Log.d("WifiDirectActivity", "after connect");
             InputStream  is = socket.getInputStream();
             ObjectInputStream ois = new ObjectInputStream(is);
             WiFiTransferModal  wifiinfo = (WiFiTransferModal) ois.readObject();
+			Log.d("WifiDirectActivity", "fileinfo acquired");
             app.OnFileInfoAvailable(wifiinfo);
+			Log.d("WifiDirectActivity", "after callback");
             File f = new File(destPath + File.separator+ wifiinfo.getFileName()+wifiinfo.getExtension());
             if(f.exists() && !f.isDirectory()) {
                 f.delete();
@@ -62,11 +67,9 @@ public class StreamClientAsync  extends AsyncTask<String , Integer , Boolean>   
             while((len = is.read(BUFF)) != -1){
               fos.write(BUFF, 0, len);
             }
-
-
-
-        }catch (IOException | ClassNotFoundException  e  ){
-
+			
+        } catch (IOException | ClassNotFoundException  e  ){
+			Log.d("WifiDirectActivity", e.toString());
         }
 
 

@@ -84,6 +84,7 @@ public class WifiDirectActivity extends AppCompatActivity implements WifiP2pMana
 						Log.d(TAG, "Failed to connect to "+config.deviceAddress);
 					}
 				});
+				startSearch();
 			}
 		});
 		
@@ -135,7 +136,8 @@ public class WifiDirectActivity extends AppCompatActivity implements WifiP2pMana
 
 		String folderPath =  settings.getString("serverDir", Environment.getExternalStorageState());
 
-		new StreamClientAsync(this , folderPath, info.groupOwnerAddress.getHostAddress(), 8888, 5000).execute();
+//		new StreamClientAsync(this , folderPath, info.groupOwnerAddress.getHostAddress(), 8888, 5000).execute();
+		new StreamClientAsync(this , folderPath, "192.168.49.1", 8888, 5000).execute();
 
 	}
 }
