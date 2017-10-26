@@ -1,10 +1,14 @@
 package fr.vmonot.videostream;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,13 +18,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class WifiDirectActivity extends AppCompatActivity {
+import java.io.File;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
+public class WifiDirectActivity extends AppCompatActivity implements WifiP2pManager.ConnectionInfoListener {
 	private static final String TAG = "WifiDirectActivity";
 	
 	private final IntentFilter intentFilter = new IntentFilter();
 	WifiP2pManager mManager;
 	WifiP2pManager.Channel mChannel;
 	WiFiDirectBroadcastReceiver receiver;
+
+	private WifiP2pInfo info;
 	
 	ListView deviceList;
 	private ArrayAdapter<String> deviceAdapter;
@@ -61,8 +72,11 @@ public class WifiDirectActivity extends AppCompatActivity {
 					public void onSuccess() {
 						Log.d(TAG, "Connected to "+config.deviceAddress);
 						Toast.makeText(WifiDirectActivity.this, "Connected to "+config.deviceAddress, Toast.LENGTH_SHORT).show();
-						
-						startSearch();
+
+						mManager.requestConnectionInfo(mChannel,
+								WifiDirectActivity.this);
+
+
 					}
 					
 					@Override
@@ -103,5 +117,25 @@ public class WifiDirectActivity extends AppCompatActivity {
 		deviceAdapter.clear();
 		receiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, deviceAdapter, this);
 		registerReceiver(receiver, intentFilter);
+	}
+
+	public void OnFileInfoAvailable(WiFiTransferModal wifiinfo) {
+		SharedPreferences settings = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+
+		String folderPath =  settings.getString("serverDir", Environment.getExternalStorageState());
+		Intent myintent = new Intent(WifiDirectActivity.this,VideoPlayerActivity.class);
+		myintent.putExtra("VideoPath" , folderPath + File.separator+ wifiinfo.getFileName()+wifiinfo.getExtension() );
+		startActivity(myintent);
+
+	}
+
+	@Override
+	public void onConnectionInfoAvailable(WifiP2pInfo info) {
+		SharedPreferences settings = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+
+		String folderPath =  settings.getString("serverDir", Environment.getExternalStorageState());
+
+		new StreamClientAsync(this , folderPath, info.groupOwnerAddress.getHostAddress(), 8888, 5000).execute();
+
 	}
 }

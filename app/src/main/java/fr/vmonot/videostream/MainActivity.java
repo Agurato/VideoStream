@@ -26,22 +26,24 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-	
+
 	public static final String TAG = "MainActivity";
 
     String folderPath;
     ListView filelist;
     ArrayAdapter<String>adapter;
     SharedPreferences settings;
-	
+
+
 	// Boolean telling us whether a download is in progress, so we don't trigger overlapping
 	// downloads with consecutive button clicks.
 	private boolean mDownloading = false;
-	
+
 	private ProgressDialog pDialog;
-		
+
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,11 +68,12 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
 				String filename = folderPath + File.separator+ adapter.getItem(position);
-				
+				new StreamServerAsync(8888, filename, getApplicationContext() ).execute();
+				Toast.makeText(MainActivity.this, "stream server waiting on " + 8888, Toast.LENGTH_SHORT).show();
 				return true;
 			}
 		});
-		
+
 		pDialog = new ProgressDialog(this);
 		pDialog.setMessage("Downloading... Please wait...");
 		pDialog.setIndeterminate(false);
@@ -92,22 +95,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-			
+
             case R.id.fetch_action:
 				startDownloadVideo();
                 return true;
-			
+
             case R.id.action_settings:
                 startSettings();
                 return true;
-			
             case R.id.action_wifidirect:
                 startWifiDirect();
                 return true;
         }
         return false;
     }
-    
+
     private void startDownloadVideo() {
 		new DownloadFileFromURL().execute("https://ia800201.us.archive.org/22/items/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4");
 	}
@@ -128,10 +130,10 @@ public class MainActivity extends AppCompatActivity {
                 adapter.add(fileEntry.getName());
 		}
 	}
-	
+
 	private class DownloadFileFromURL extends AsyncTask<String, Integer, String> {
 		String filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-		
+
 		/**
 		 * Before starting background thread
 		 * */
@@ -141,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 			Log.d(TAG, "Start downloading");
 			pDialog.show();
 		}
-		
+
 		/**
 		 * Downloading file in background thread
 		 * */
@@ -155,51 +157,51 @@ public class MainActivity extends AppCompatActivity {
 					downloadFile.delete();
 				}
 				Log.d(MainActivity.TAG, filepath);
-				
+
 				URL url = new URL(f_url[0]);
-				
+
 				URLConnection conection = url.openConnection();
 				conection.connect();
 				// getting file length
 				int fileLength = conection.getContentLength();
 				pDialog.setMax(fileLength/1024);
 				pDialog.setProgress(0);
-				
+
 				// input stream to read file - with 8k buffer
 				InputStream input = new BufferedInputStream(url.openStream(), 8192);
-				
+
 				// Output stream to write file
 				OutputStream output = new FileOutputStream(filepath);
 				byte data[] = new byte[1024];
-				
+
 				int total = 0;
 				while ((count = input.read(data)) != -1) {
 					total += count;
 					publishProgress(total/1024);
-					
+
 					// writing data to file
 					output.write(data, 0, count);
 				}
-				
+
 				// flushing output
 				output.flush();
-				
+
 				// closing streams
 				output.close();
 				input.close();
-				
+
 			} catch (Exception e) {
 				Log.e("Error: ", e.getMessage());
 			}
-			
+
 			return null;
 		}
-		
+
 		@Override
 		protected void onProgressUpdate(Integer... progress) {
 			pDialog.setProgress(progress[0]);
 		}
-		
+
 		/**
 		 * After completing background task
 		 * **/
@@ -207,12 +209,12 @@ public class MainActivity extends AppCompatActivity {
 		protected void onPostExecute(String file_url) {
 			System.out.println("Downloaded");
 			Toast.makeText(MainActivity.this, "Downloaded to "+filepath, Toast.LENGTH_SHORT).show();
-			
+
 			MainActivity.this.refreshFileView();
 			pDialog.dismiss();
 			pDialog.setMax(0);
 			pDialog.setProgress(0);
 		}
-		
+
 	}
 }
