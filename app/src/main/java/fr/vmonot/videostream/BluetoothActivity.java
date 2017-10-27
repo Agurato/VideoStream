@@ -1,5 +1,6 @@
 package fr.vmonot.videostream;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Environment;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -109,8 +111,21 @@ public class BluetoothActivity extends AppCompatActivity {
 	}
 	
 	public void startSearch() {
+		if(Build.VERSION.SDK_INT > 23) {
+			int permissionCheck = this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
+			permissionCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION");
+			if (permissionCheck != 0) {
+				
+				this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001); //Any number
+			}
+		}
+		else{
+			Log.d(TAG, "checkBTPermissions: No need to check permissions. SDK version < LOLLIPOP.");
+		}
+		
 		deviceAdapter.clear();
 		deviceAL.clear();
+		
 		if (mBtAdapter.isDiscovering()) {
 			Log.d(TAG, "isDiscovering, cancelling");
 			mBtAdapter.cancelDiscovery();

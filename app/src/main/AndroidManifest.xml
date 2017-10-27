@@ -33,15 +33,25 @@
         </activity>
         <activity
             android:name=".VideoPlayerActivity"
+            android:label="Video Player"
             android:configChanges="orientation|keyboardHidden|screenSize">
         </activity>
-        <activity android:name=".VideoStreamSettingsActivity"/>
-        <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity"/>
+        <activity
+            android:name=".VideoStreamSettingsActivity"
+            android:label="Settings">
+        </activity>
+        <activity
+            android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity"
+            android:label="Directory Chooser">
+        </activity>
         <activity
             android:name=".WifiDirectActivity"
+            android:label="WiFi Direct"
             android:configChanges="orientation|keyboardHidden|screenSize">
         </activity>
-        <activity android:name=".BluetoothActivity">
+        <activity
+            android:name=".BluetoothActivity"
+            android:label="Bluetooth">
         </activity>
     </application>
 
