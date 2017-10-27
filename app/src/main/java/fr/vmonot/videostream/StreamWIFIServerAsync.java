@@ -1,5 +1,7 @@
 package fr.vmonot.videostream;
 
+/** Vincent Monot et Antoine Regnier */
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
@@ -15,10 +17,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-/**
- * Created by antoine on 25/10/17.
- */
 
 public class StreamWIFIServerAsync extends AsyncTask<String , Integer , Boolean> {
 

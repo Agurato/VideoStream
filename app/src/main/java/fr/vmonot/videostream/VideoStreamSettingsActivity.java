@@ -1,5 +1,7 @@
 package fr.vmonot.videostream;
 
+/** Vincent Monot et Antoine Regnier */
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;

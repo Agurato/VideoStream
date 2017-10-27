@@ -1,5 +1,7 @@
 package fr.vmonot.videostream;
 
+/** Vincent Monot et Antoine Regnier */
+
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;

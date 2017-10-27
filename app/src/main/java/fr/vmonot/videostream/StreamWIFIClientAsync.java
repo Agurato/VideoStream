@@ -1,5 +1,7 @@
 package fr.vmonot.videostream;
 
+/** Vincent Monot et Antoine Regnier */
+
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -11,9 +13,6 @@ import java.io.ObjectInputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-/**
- * Created by antoine on 25/10/17.
- */
 
 public class StreamWIFIClientAsync extends AsyncTask<String , Integer , Boolean>   {
      private Socket socket;
@@ -65,6 +64,7 @@ public class StreamWIFIClientAsync extends AsyncTask<String , Integer , Boolean>
 					start = true;
 				}
             }
+            socket.close();
 			
         } catch (IOException | ClassNotFoundException  e  ){
 			Log.d("WifiDirectActivity", e.toString());

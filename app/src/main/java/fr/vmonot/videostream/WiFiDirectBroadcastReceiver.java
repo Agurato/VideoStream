@@ -1,5 +1,7 @@
 package fr.vmonot.videostream;
 
+/** Vincent Monot et Antoine Regnier */
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,10 +15,6 @@ import android.widget.ListView;
 
 import java.util.Arrays;
 import java.util.List;
-
-/**
- * Created by Vincent on 25/10/2017.
- */
 
 public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 	private final static String TAG = "WiFiDirectBroadcastRcvr";

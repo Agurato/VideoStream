@@ -1,5 +1,7 @@
 package fr.vmonot.videostream;
 
+/** Vincent Monot et Antoine Regnier */
+
 import java.io.Serializable;
 
 public class WiFiTransferModal implements Serializable {

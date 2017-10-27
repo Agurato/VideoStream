@@ -1,18 +1,17 @@
 package fr.vmonot.videostream;
 
+/** Vincent Monot et Antoine Regnier */
+
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import android.net.Uri;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.MediaController;
 import android.widget.VideoView;
-
-import java.io.File;
 
 public class VideoPlayerActivity extends AppCompatActivity {
 	private VideoView vidView;

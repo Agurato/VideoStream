@@ -1,12 +1,12 @@
 package fr.vmonot.videostream;
 
+/** Vincent Monot et Antoine Regnier */
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
@@ -18,9 +18,6 @@ import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
-/**
- * Created by antoine on 25/10/17.
- */
 
 public class StreamBTServerAsync extends AsyncTask<String , Integer , Boolean> {
 

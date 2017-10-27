@@ -1,6 +1,7 @@
-// Copyright 2011 Google Inc. All Rights Reserved.
-
 package fr.vmonot.videostream;
+
+
+/** Vincent Monot et Antoine Regnier */
 
 import android.app.IntentService;
 import android.content.ContentResolver;
