@@ -40,7 +40,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 			@Override
 			public void onPeersAvailable(WifiP2pDeviceList wifiP2pDeviceList) {
 				for(WifiP2pDevice device : wifiP2pDeviceList.getDeviceList()) {
-					Log.d(TAG, "device: "+device.toString());
+//					Log.d(TAG, "device: "+device.toString());
 					
 					String deviceDesc = device.deviceName+"\n"+device.deviceAddress;
 					deviceAdapter.add(deviceDesc);

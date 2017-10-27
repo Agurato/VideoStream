@@ -69,10 +69,7 @@ public class WifiDirectActivity extends AppCompatActivity implements WifiP2pMana
 						Log.d(TAG, "Connected to "+config.deviceAddress);
 						Toast.makeText(WifiDirectActivity.this, "Connected to "+config.deviceAddress, Toast.LENGTH_SHORT).show();
 
-						mManager.requestConnectionInfo(mChannel,
-								WifiDirectActivity.this);
-
-
+						mManager.requestConnectionInfo(mChannel, WifiDirectActivity.this);
 					}
 					
 					@Override
