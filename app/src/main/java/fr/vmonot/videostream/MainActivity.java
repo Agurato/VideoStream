@@ -24,12 +24,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
 	public static final String TAG = "MainActivity";
-
-    String folderPath;
+	public static UUID uuid = UUID.fromString("fb36491d-7c21-40ef-9f67-a63237b5bbea");
+	String folderPath;
     ListView filelist;
     ArrayAdapter<String>adapter;
     SharedPreferences settings;
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
 				String filename = folderPath + File.separator+ adapter.getItem(position);
-				new StreamServerAsync(8888, filename, getApplicationContext() ).execute();
+				new StreamBTServerAsync( filename, getApplicationContext() ).execute();
 				Toast.makeText(MainActivity.this, "stream server waiting on " + 8888, Toast.LENGTH_SHORT).show();
 				return true;
 			}
@@ -100,11 +102,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 startSettings();
                 return true;
-			
             case R.id.action_wifidirect:
                 startWifiDirect();
                 return true;
-			
+
 			case R.id.action_bt:
 				startActivity(new Intent(this, BluetoothActivity.class));
 				return true;

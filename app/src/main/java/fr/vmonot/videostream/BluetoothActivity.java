@@ -6,6 +6,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class BluetoothActivity extends AppCompatActivity {
@@ -49,7 +52,11 @@ public class BluetoothActivity extends AppCompatActivity {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 				BluetoothDevice device = deviceAL.get(i);
-				
+				SharedPreferences settings = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+
+				String folderPath =  settings.getString("serverDir", Environment.getExternalStorageState());
+				new StreamBTClientAsync(BluetoothActivity.this , device ,folderPath).execute();
+
 				Log.d(TAG, device.getAddress());
 			}
 		});
@@ -110,5 +117,15 @@ public class BluetoothActivity extends AppCompatActivity {
 		}
 		mBtAdapter.startDiscovery();
 		Log.d(TAG, "startDiscovery");
+	}
+
+	public void OnFileInfoAvailable(WiFiTransferModal wifiinfo) {
+		SharedPreferences settings = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+
+		String folderPath =  settings.getString("serverDir", Environment.getExternalStorageState());
+		Intent myintent = new Intent(BluetoothActivity.this,VideoPlayerActivity.class);
+		myintent.putExtra("VideoPath" , folderPath + File.separator+ wifiinfo.getFileName()+wifiinfo.getExtension() );
+		startActivity(myintent);
+
 	}
 }

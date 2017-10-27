@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.wifi.p2p.WifiP2pConfig;
-import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Environment;
@@ -19,9 +18,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 
 public class WifiDirectActivity extends AppCompatActivity implements WifiP2pManager.ConnectionInfoListener {
 	private static final String TAG = "WifiDirectActivity";
@@ -136,8 +132,8 @@ public class WifiDirectActivity extends AppCompatActivity implements WifiP2pMana
 
 		String folderPath =  settings.getString("serverDir", Environment.getExternalStorageState());
 
-//		new StreamClientAsync(this , folderPath, info.groupOwnerAddress.getHostAddress(), 8888, 5000).execute();
-		new StreamClientAsync(this , folderPath, "192.168.49.1", 8888, 5000).execute();
+//		new StreamBTClientAsync(this , folderPath, info.groupOwnerAddress.getHostAddress(), 8888, 5000).execute();
+		new StreamWIFIClientAsync(this , folderPath, "192.168.49.1", 8888, 500000000).execute();
 
 	}
 }

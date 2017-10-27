@@ -2,29 +2,24 @@ package fr.vmonot.videostream;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URI;
 
 /**
  * Created by antoine on 25/10/17.
  */
 
-public class StreamServerAsync extends AsyncTask<String , Integer , Boolean> {
+public class StreamWIFIServerAsync extends AsyncTask<String , Integer , Boolean> {
 
     byte buf[]  = new byte[1024];
     int len;
@@ -32,9 +27,9 @@ public class StreamServerAsync extends AsyncTask<String , Integer , Boolean> {
         private TextView statusText;
         private String path;
         private int port;
-    public final static  String TAG = "StreamServerAsync";
+    public final static  String TAG = "StreamBTServerAsync";
 
-        public StreamServerAsync(int  port, String  path , Context context) {
+        public StreamWIFIServerAsync(int  port, String  path , Context context) {
             super();
             this.context = context;
             len = 0;
@@ -63,6 +58,8 @@ public class StreamServerAsync extends AsyncTask<String , Integer , Boolean> {
                  */
                 File f = new File(path);
                 InputStream is = cr.openInputStream(Uri.parse(path));
+                wifiinfo.setGOInetAddress("192.168.49.1");
+                wifiinfo.setInetAddress (client.getInetAddress().getHostAddress());
                 wifiinfo.setFileLength(f.length());
                 wifiinfo.setFileName(f.getName());
                 wifiinfo.setExtension("");
@@ -79,7 +76,7 @@ public class StreamServerAsync extends AsyncTask<String , Integer , Boolean> {
                 serverSocket.close();
 
             } catch (IOException e) {
-                Log.e(StreamServerAsync.TAG, e.getMessage());
+                Log.e(StreamWIFIServerAsync.TAG, e.getMessage());
                 return null;
             }
             return true;
@@ -91,7 +88,7 @@ public class StreamServerAsync extends AsyncTask<String , Integer , Boolean> {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result != null) {
-                Log.d(StreamServerAsync.TAG,"File sent:" + result);
+                Log.d(StreamWIFIServerAsync.TAG,"File sent:" + result);
             }
         }
 

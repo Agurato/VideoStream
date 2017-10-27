@@ -1,5 +1,9 @@
 package fr.vmonot.videostream;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pInfo;
@@ -26,30 +30,34 @@ import static android.R.attr.inputType;
  * Created by antoine on 25/10/17.
  */
 
-public class StreamClientAsync  extends AsyncTask<String , Integer , Boolean>   {
+public class StreamBTClientAsync extends AsyncTask<String , Integer , Boolean>   {
      private Socket socket;
-    private String host;
-    private int port;
-    private WifiDirectActivity app;
+
+    private BluetoothActivity app;
     private String destPath;
-    private int timeout;
+
     byte[] BUFF = new byte[512];
-    public StreamClientAsync(WifiDirectActivity app, String destPath ,String host, int port , int timeout){
+    BluetoothDevice mdevice;
+    public StreamBTClientAsync(BluetoothActivity app, BluetoothDevice mdevice , String destPath ){
         this.socket  = new Socket();
-        this.host = host;
-        this.port = port;
-        this.timeout = timeout;
+
 		this.destPath = destPath;
 		this.app = app;
+         this.mdevice = mdevice;
     }
 
     @Override
     protected Boolean doInBackground(String... params) {
 
         try {
-			Log.d("WifiDirectActivity", host+":"+port);
-            socket.bind(null);
-            socket.connect((new InetSocketAddress(host, port)), timeout);
+            BluetoothSocket serverSocket = null;
+
+            // Create a new listening server socket
+            try {
+                serverSocket = mdevice.createInsecureRfcommSocketToServiceRecord(MainActivity.uuid);
+            } catch (IOException e) {
+                Log.e("BluetoothActivity", "Socket Type: "  + "listen() failed", e);
+            }
 			Log.d("WifiDirectActivity", "after connect");
             InputStream  is = socket.getInputStream();
             ObjectInputStream ois = new ObjectInputStream(is);

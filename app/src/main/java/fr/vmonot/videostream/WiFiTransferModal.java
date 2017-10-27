@@ -7,6 +7,7 @@ public class WiFiTransferModal implements Serializable {
     private String FileName;
     private Long FileLength;
     private String InetAddress;
+    private String GOInetAddress;
     private String extension;
 
 
@@ -29,6 +30,13 @@ public class WiFiTransferModal implements Serializable {
 
     public void setInetAddress(String inetAddress) {
         InetAddress = inetAddress;
+    }
+    public void setGOInetAddress(String inetAddress) {
+        GOInetAddress = inetAddress;
+    }
+
+    public String getGOInetAddress() {
+        return GOInetAddress;
     }
 
 
