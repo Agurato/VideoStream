@@ -79,9 +79,7 @@ public class BluetoothActivity extends AppCompatActivity {
 					Log.d(TAG, "Discovery finished");
 				} else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 					//bluetooth device found
-					Log.d(TAG, "Device found");
 					BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-					Log.d(TAG, "Device found:"+device.toString());
 					
 					deviceAdapter.add(device.getName()+"\n"+device.getAddress());
 					deviceAL.add(device);
@@ -138,8 +136,15 @@ public class BluetoothActivity extends AppCompatActivity {
 		SharedPreferences settings = getSharedPreferences("Settings", Context.MODE_PRIVATE);
 
 		String folderPath =  settings.getString("serverDir", Environment.getExternalStorageState());
-		Intent myintent = new Intent(BluetoothActivity.this,VideoPlayerActivity.class);
-		myintent.putExtra("VideoPath" , folderPath + File.separator+ wifiinfo.getFileName()+wifiinfo.getExtension() );
+//
+//		try {
+//			Thread.sleep(5000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+		
+		Intent myintent = new Intent(BluetoothActivity.this, VideoPlayerActivity.class);
+		myintent.putExtra("VideoPath" , folderPath + File.separator+ wifiinfo.getFileName());
 		startActivity(myintent);
 
 	}

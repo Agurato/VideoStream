@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import java.io.File;
+
 public class VideoPlayerActivity extends AppCompatActivity {
 	private VideoView vidView;
 	private MediaController vidControl;
@@ -32,14 +34,18 @@ public class VideoPlayerActivity extends AppCompatActivity {
 		vidControl = new MediaController(this);
 		// Set it to use the VideoView instance as its anchor.
 		vidControl.setAnchorView(vidView);
+		
 		// Set it as the media controller for the VideoView object.
 		vidView.setMediaController(vidControl);
 		
 		// Prepare the URI for the endpoint.
 		//String vidAddress = "android.resource://" + getPackageName() + "/" + R.raw.videomieux;
-		Uri vidUri = Uri.parse(vidAddress);
+//		Uri vidUri = Uri.parse(vidAddress);
+//		Uri vidUri = Uri.fromFile(new File(vidAddress));
+		
 		// Parse the address string as a URI so that we can pass it to the VideoView object.
-		vidView.setVideoURI(vidUri);
+//		vidView.setVideoURI(vidUri);
+		vidView.setVideoPath("file://"+vidAddress);
 		// Start playback.
 		vidView.start();
 	}

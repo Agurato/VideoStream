@@ -9,6 +9,7 @@ import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.AsyncTask;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
 import java.io.ByteArrayInputStream;
@@ -25,22 +26,19 @@ import java.nio.file.StandardOpenOption;
 
 import static android.R.attr.host;
 import static android.R.attr.inputType;
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by antoine on 25/10/17.
  */
 
 public class StreamBTClientAsync extends AsyncTask<String , Integer , Boolean>   {
-     private Socket socket;
-
     private BluetoothActivity app;
     private String destPath;
 
-    byte[] BUFF = new byte[512];
+    byte[] BUFF = new byte[2048];
     BluetoothDevice mdevice;
-    public StreamBTClientAsync(BluetoothActivity app, BluetoothDevice mdevice , String destPath ){
-        this.socket  = new Socket();
-
+    public StreamBTClientAsync(BluetoothActivity app, BluetoothDevice mdevice , String destPath) {
 		this.destPath = destPath;
 		this.app = app;
          this.mdevice = mdevice;
@@ -53,31 +51,37 @@ public class StreamBTClientAsync extends AsyncTask<String , Integer , Boolean>  
             BluetoothSocket serverSocket = null;
 
             // Create a new listening server socket
-            try {
-                serverSocket = mdevice.createInsecureRfcommSocketToServiceRecord(MainActivity.uuid);
-            } catch (IOException e) {
-                Log.e("BluetoothActivity", "Socket Type: "  + "listen() failed", e);
-            }
-			Log.d("WifiDirectActivity", "after connect");
-            InputStream  is = socket.getInputStream();
+			serverSocket = mdevice.createRfcommSocketToServiceRecord(MainActivity.uuid);
+			serverSocket.connect();
+			Log.d("BluetoothActivity", "after connect");
+            InputStream is = serverSocket.getInputStream();
             ObjectInputStream ois = new ObjectInputStream(is);
             WiFiTransferModal  wifiinfo = (WiFiTransferModal) ois.readObject();
-			Log.d("WifiDirectActivity", "fileinfo acquired");
-            app.OnFileInfoAvailable(wifiinfo);
-			Log.d("WifiDirectActivity", "after callback");
+			
             File f = new File(destPath + File.separator+ wifiinfo.getFileName()+wifiinfo.getExtension());
             if(f.exists() && !f.isDirectory()) {
                 f.delete();
             }
             FileOutputStream fos = new FileOutputStream( destPath + File.separator+ wifiinfo.getFileName()+wifiinfo.getExtension(), true);
-            int len;
-
+			Log.d("StreamBTClient", "wifinfo="+wifiinfo.toString());
+            int len = 0;
+			int total = 0;
+			boolean start = false;
+			long startTime = System.currentTimeMillis();
             while((len = is.read(BUFF)) != -1){
-              fos.write(BUFF, 0, len);
+              	fos.write(BUFF, 0, len);
+				total += len;
+				if(total > 512000 && !start) {
+					long endTime = System.currentTimeMillis();
+					Log.d("BluetoothActivity", "Start video : 512K ok ("+(endTime-startTime)+")");
+					app.OnFileInfoAvailable(wifiinfo);
+					start = true;
+				}
             }
+			Log.d("StreamBTClient", "over");
 			
         } catch (IOException | ClassNotFoundException  e  ){
-			Log.d("WifiDirectActivity", e.toString());
+			Log.e("BluetoothActivity", e.toString());
         }
 
 
