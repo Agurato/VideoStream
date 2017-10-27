@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         settings = getSharedPreferences("Settings", Context.MODE_PRIVATE);
 
-        folderPath =  settings.getString("serverDir", Environment.getExternalStorageState());
+        folderPath =  settings.getString("serverDir", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
         filelist = (ListView) findViewById(R.id.FileList);
 
         adapter = new ArrayAdapter<String>(this,

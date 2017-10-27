@@ -56,7 +56,7 @@ public class BluetoothActivity extends AppCompatActivity {
 				BluetoothDevice device = deviceAL.get(i);
 				SharedPreferences settings = getSharedPreferences("Settings", Context.MODE_PRIVATE);
 
-				String folderPath =  settings.getString("serverDir", Environment.getExternalStorageState());
+				String folderPath =  settings.getString("serverDir", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
 				new StreamBTClientAsync(BluetoothActivity.this , device ,folderPath).execute();
 
 				Log.d(TAG, device.getAddress());
@@ -135,7 +135,7 @@ public class BluetoothActivity extends AppCompatActivity {
 	public void OnFileInfoAvailable(WiFiTransferModal wifiinfo) {
 		SharedPreferences settings = getSharedPreferences("Settings", Context.MODE_PRIVATE);
 
-		String folderPath =  settings.getString("serverDir", Environment.getExternalStorageState());
+		String folderPath =  settings.getString("serverDir", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
 //
 //		try {
 //			Thread.sleep(5000);

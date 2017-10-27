@@ -51,7 +51,7 @@ public class StreamBTClientAsync extends AsyncTask<String , Integer , Boolean>  
             BluetoothSocket serverSocket = null;
 
             // Create a new listening server socket
-			serverSocket = mdevice.createRfcommSocketToServiceRecord(MainActivity.uuid);
+			serverSocket = mdevice.createInsecureRfcommSocketToServiceRecord(MainActivity.uuid);
 			serverSocket.connect();
 			Log.d("BluetoothActivity", "after connect");
             InputStream is = serverSocket.getInputStream();

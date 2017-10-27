@@ -116,7 +116,7 @@ public class WifiDirectActivity extends AppCompatActivity implements WifiP2pMana
 	public void OnFileInfoAvailable(WiFiTransferModal wifiinfo) {
 		SharedPreferences settings = getSharedPreferences("Settings", Context.MODE_PRIVATE);
 
-		String folderPath =  settings.getString("serverDir", Environment.getExternalStorageState());
+		String folderPath =  settings.getString("serverDir", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
 		Intent myintent = new Intent(WifiDirectActivity.this,VideoPlayerActivity.class);
 		myintent.putExtra("VideoPath" , folderPath + File.separator+ wifiinfo.getFileName()+wifiinfo.getExtension() );
 		startActivity(myintent);
@@ -127,7 +127,7 @@ public class WifiDirectActivity extends AppCompatActivity implements WifiP2pMana
 	public void onConnectionInfoAvailable(WifiP2pInfo info) {
 		SharedPreferences settings = getSharedPreferences("Settings", Context.MODE_PRIVATE);
 
-		String folderPath =  settings.getString("serverDir", Environment.getExternalStorageState());
+		String folderPath =  settings.getString("serverDir", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
 
 //		new StreamBTClientAsync(this , folderPath, info.groupOwnerAddress.getHostAddress(), 8888, 5000).execute();
 		new StreamWIFIClientAsync(this , folderPath, "192.168.49.1", 8888, 500000000).execute();
