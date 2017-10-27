@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
@@ -57,7 +58,7 @@ public class StreamWIFIServerAsync extends AsyncTask<String , Integer , Boolean>
                  * Save the input stream from the client as a JPEG file
                  */
                 File f = new File(path);
-                InputStream is = cr.openInputStream(Uri.parse(path));
+                InputStream is = new FileInputStream(f);
                 wifiinfo.setGOInetAddress("192.168.49.1");
                 wifiinfo.setInetAddress (client.getInetAddress().getHostAddress());
                 wifiinfo.setFileLength(f.length());

@@ -1,6 +1,7 @@
 package fr.vmonot.videostream;
 
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -66,9 +67,16 @@ public class MainActivity extends AppCompatActivity {
 		filelist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+				if (BluetoothAdapter.getDefaultAdapter().getScanMode() !=
+						BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+					Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+					discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+					startActivity(discoverableIntent);
+				}
 				String filename = folderPath + File.separator+ adapter.getItem(position);
 				new StreamBTServerAsync( filename, getApplicationContext() ).execute();
-				Toast.makeText(MainActivity.this, "stream server waiting on " + 8888, Toast.LENGTH_SHORT).show();
+				new StreamWIFIServerAsync(8888, filename, getApplicationContext() ).execute();
+				Toast.makeText(MainActivity.this, "stream server waiting  " , Toast.LENGTH_SHORT).show();
 				return true;
 			}
 		});

@@ -5,12 +5,14 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
@@ -52,7 +54,9 @@ public class StreamBTServerAsync extends AsyncTask<String , Integer , Boolean> {
 
                 // Create a new listening server socket
                 try {
-                    serverSocket = BluetoothAdapter.getDefaultAdapter().listenUsingInsecureRfcommWithServiceRecord("videostream", MainActivity.uuid);
+
+                    serverSocket = BluetoothAdapter.getDefaultAdapter().listenUsingRfcommWithServiceRecord("videostream", MainActivity.uuid);
+
                 } catch (IOException e) {
                     Log.e(TAG, "Socket Type: "  + "listen() failed", e);
                 }
@@ -65,8 +69,9 @@ public class StreamBTServerAsync extends AsyncTask<String , Integer , Boolean> {
                  * If this code is reached, a client has connected and transferred data
                  * Save the input stream from the client as a JPEG file
                  */
-                File f = new File(path);
-                InputStream is = cr.openInputStream(Uri.parse(path));
+                File f  = new File((path));
+
+                InputStream is =  new FileInputStream((path));
 
                 wifiinfo.setFileLength(f.length());
                 wifiinfo.setFileName(f.getName());
